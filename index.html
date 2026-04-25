@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saigon - La perle de l'Extrême-Orient</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="locations.js"></script>
+</head>
+<body class="bg-warning bg-opacity-25">
+    <!-- Introduction -->
+    <div>
+        <h1 class="text-danger text-center mx-4 my-1 fw-bold d-none d-sm-block">
+            Saigon - La perle de l'Extrême-Orient
+        </h1>
+        <h5 class="text-danger text-center mx-4 my-1 fw-bold d-block d-sm-none">
+            Saigon - La perle de l'Extrême-Orient
+        </h5>
+        <h3 class="text-primary text-center mx-4 my-1 fw-bold d-none d-sm-block">
+            Welcome to Ho Chi Minh City!
+        </h3>
+        <h5 class="text-primary text-center mx-4 my-1 fw-bold d-block d-sm-none">
+            Welcome to Ho Chi Minh City!
+        </h5>
+        <p class="text-center mx-4 my-1 fw-bold">
+            A vibrant street life city with many places for sightseeing and exploration,
+            along with some chilling coffee shops, and chances to meet friendly locals.
+        </p>
+    </div>
+
+    <!-- Map -->
+    <div class="mx-2 mx-md-auto my-2 border border-3 border-primary col col-md-9">
+        <div id="map" style="width: 100%; height: 400px"></div>
+    </div>
+
+    <!-- Buttons for filtering markers -->
+    <div>
+        <h5 class="text-secondary text-center m-0 fw-bold">Filter your markers</h5>
+        <div class="text-center my-2">
+            <button id="prominent-places" class="mx-2 my-1 rounded-3 fw-bold text-warning border-warning" style="width: 150px">Prominent Places</button>
+            <button id="coffee-shops" class="mx-2 my-1 rounded-3 fw-bold text-primary border-primary" style="width: 150px">Coffee Shops</button>
+            <button id="entertainments" class="mx-2 my-1 rounded-3 fw-bold text-danger border-danger" style="width: 150px">Entertainments</button>
+            <button id="restaurants" class="mx-2 my-1 rounded-3 fw-bold text-success border-success" style="width: 150px">Restaurants</button>
+            <button id="all-markers" class="mx-2 my-1 rounded-3 fw-bold text-info border-info" style="width: 50px">All</button>
+        </div>
+    </div>
+
+    <!-- Buttons for geolocation -->
+    <div>
+        <h5 class="text-center m-0 fw-bold">*Get Your Location and Nguyen Hue Pedestrian Street*</h5>
+        <div class="text-center my-2">
+            <button id="current-geolocate" class="mx-2 my-1 rounded-3 fw-bold" style="width: 200px">Your Current Location</button>
+            <button id="nguyen-hue-geolocate" class="mx-2 my-1 rounded-3 fw-bold" style="width: 200px">Nguyen Hue Street</button>
+        </div>
+    </div>
+
+    <!-- Input for geocoder -->
+    <div>
+        <h5 class="text-primary text-center fw-bold">**Enter Location Name, Address and Select Category for Adding Marker**</h5>
+        <div>
+            <div class="text-center mx-auto my-2 d-lg-flex justify-content-center align-items-center">
+                <div class="d-md-flex mx-2 my-2 justify-content-center align-items-center">
+                    <label for="name-input" class="text-primary fw-bold mx-1"> Name:</label>
+                    <input type="text" id="name-input" class="mx-1 px-2 border-primary rounded-3 fst-italic" style="width: 75%" placeholder="Enter location name"/>
+                </div>
+                <div class="d-md-flex mx-2 my-2 justify-content-center align-items-center">
+                    <label for="address-input" class="text-primary fw-bold mx-1">Address:</label>
+                    <input type="text" id="address-input" class="mx-1 px-2 border-primary rounded-3 fst-italic" placeholder="Enter an address" style="width: 75%" />
+                </div>
+                <div class="d-md-flex mx-2 my-2 justify-content-center align-items-center">
+                    <label for="category-select" class="text-primary fw-bold mx-1">Category:</label>
+                    <select id="category-select" class="text-center mx-1 px-2 border-primary rounded-3 fw-bold fst-italic">
+                        <option value="Prominent Places">Prominent Places</option>
+                        <option value="Coffee Shops">Coffee Shops</option>
+                        <option value="Entertainment">Entertainments</option>
+                        <option value="Restaurants">Restaurants</option>
+                    </select>
+                </div>
+                <button id="address-send" class="text-primary border-primary rounded-3 fw-bold mx-2 my-2" style="width: 125px">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input for geodirections -->
+    <div>
+        <h5 class="text-success text-center my-2 fw-bold">***Find your best route to the next exploration place***</h5>
+        <div class="text-center mx-auto my-2 d-md-flex justify-content-center align-items-center">
+            <div class="d-md-flex flex-column mx-2 my-2 justify-content-center align-items-center">
+                <label for="starting-location" class="text-success fw-bold mx-1">Going from:</label>
+                <select id="starting-location" class="text-center mx-1 px-2 border-success rounded-3 fw-bold fst-italic">
+                </select>
+            </div>
+            <div class="d-md-flex flex-column mx-2 my-2 justify-content-center align-items-center">
+                <label for="ending-location" class="text-success fw-bold mx-1">Arrive at:</label>
+                <select id="ending-location" class="text-center mx-1 px-2 border-success rounded-3 fw-bold fst-italic">
+                </select>
+            </div>
+            <div class="my-2 mx-2">
+                <button id="route-send" class="text-success mx-1 px-2 border-success rounded-3 fw-bold" onclick="calculateAndRenderRoute()">Find Route</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script parts -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwkVRTKjmMmLAMoFqebQ_ZXUFh9lhVLW0&loading=async&callback=initMap&libraries=marker" defer></script>
+    
+    <script>
+        // Global variables for map, geocoder, geodirection services and renderer
+        let map, geocoder, directionsService, directionsRenderer;
+        
+        let markers = []; // Global array to store the markers on the map
+
+        // Populate the dropdown list for geodirection when the page is loaded
+        window.addEventListener("DOMContentLoaded", function() {
+            populateDropdown();
+        })
+
+        // Initialize the map
+        function initMap() {
+            // Create the map centered at a specific location (near Nguyen Hue Pedestrian Street)
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 10.77601855529753, lng: 106.7015541049106},
+                zoom: 15,
+                mapId: "d1602249e2bd786ddf8ac959"
+            })
+
+            // Create an info window to display the information of the location when the marker is clicked
+            let locationsInfoWindow = new google.maps.InfoWindow();
+
+            // Create a function to be called when a marker is clicked, which will open the info window of the location
+            let locationMarker_clicked = function() {
+                let image = "<img src='" + this.IMAGE + "' alt='" + this.NAME + "' style='width:100px;height:100px;'><br>";
+                locationsInfoWindow.close();
+                locationsInfoWindow.setContent(image + "Name: " + this.NAME + "<br>" + "Address: " + this.ADDRESS + "<br>" + "Category: " + this.CATEGORY + "<br>" + "Latitude: " + this.LAT + "<br>" + "Longitude: " + this.LNG);
+                locationsInfoWindow.open(map, this);
+            }
+
+            // Put markers on the map for all locations
+            for (let i = 0; i < locations.length; i++) {
+                let locationIcon; // Variable to store the marker icon for each location based on its category
+                if (locations[i].CATEGORY === "Prominent Places") {
+                    locationIcon = "https://maps.google.com/mapfiles/kml/shapes/camera.png";
+                }
+                else if (locations[i].CATEGORY === "Entertainment") {
+                    locationIcon = "https://maps.google.com/mapfiles/kml/shapes/dollar.png";
+                }
+                else if (locations[i].CATEGORY === "Coffee Shops") {
+                    locationIcon = "https://maps.google.com/mapfiles/kml/shapes/coffee.png";
+                }
+                else if (locations[i].CATEGORY === "Restaurants") {
+                    locationIcon = "https://maps.google.com/mapfiles/kml/shapes/snack_bar.png";
+                }
+
+                // Create the content for the marker icon
+                const locationIcon_content = document.createElement("img");
+                locationIcon_content.src = locationIcon;
+                locationIcon_content.style.width = "35px";
+                locationIcon_content.style.height = "35px";
+
+                // Create a marker for each location and set its position, title, and content (icon)
+                let locationMarker = new google.maps.marker.AdvancedMarkerElement({
+                    map: map,
+                    position: {lat: locations[i].LAT,
+                            lng: locations[i].LNG
+                            },
+                    title: locations[i].NAME,
+                    content: locationIcon_content                    
+                });
+
+                // Store the name, address, category, latitude, and longitude of the location as the content of the info window
+                locationMarker.IMAGE = locations[i].IMAGE;
+                locationMarker.NAME = locations[i].NAME;
+                locationMarker.ADDRESS = locations[i].ADDRESS;
+                locationMarker.CATEGORY = locations[i].CATEGORY;
+                locationMarker.LAT = locations[i].LAT;
+                locationMarker.LNG = locations[i].LNG;
+
+                // Have the info window opened when the marker is clicked
+                locationMarker.addListener("gmp-click", locationMarker_clicked);
+
+                // Add the marker to the markers array
+                markers.push(locationMarker);
+            }
+            
+            // Initialize the geocoder
+            geocoder = new google.maps.Geocoder();
+
+            // Initialize the geodirection services and renderer
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+
+            // Set the map for the geodirection renderer to display the route on the map
+            directionsRenderer.setMap(map);
+        }
+
+        // Functions to filter markers based on their categories
+        function filterMarkers(category) {
+            for (let i = 0; i < markers.length; i++) {
+                if (markers[i].CATEGORY === category) {
+                    markers[i].setMap(map);
+                } else {
+                    markers[i].setMap(null);
+                }
+            }   
+        }
+
+        function showAllMarkers() {
+            for (let i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+            }
+        }
+
+        // Add event listeners to the filter buttons
+        document.getElementById("prominent-places").addEventListener("click", () =>  filterMarkers("Prominent Places"));
+        document.getElementById("coffee-shops").addEventListener("click", () => filterMarkers("Coffee Shops"));
+        document.getElementById("entertainments").addEventListener("click", () => filterMarkers("Entertainment"));
+        document.getElementById("restaurants").addEventListener("click", () => filterMarkers("Restaurants"));
+        document.getElementById("all-markers").addEventListener("click", showAllMarkers); 
+
+        // Variable to hold the state of whether the current location marker has been added to the map
+        let currentLocationAdded = false;
+
+        // Function to get the user's current location and add a marker for it on the map, able to update regularly
+        function currentGeolocation(position) {
+            // Check if current location marker added, if added, remove and add again to update the location
+            if (currentLocationAdded) {
+                // Initialize variables to store the marker and location of current location to be removed
+                let markerToRemove = markers.find(marker => marker.NAME === "Your current Location");
+                let locationToRemove = locations.find(location => location.NAME === "Your current Location");
+
+                // Check if the marker and location of current location to be removed exist, if yes, remove the marker and location in the arrays
+                if (markerToRemove) {
+                    markers.splice(markers.indexOf(markerToRemove), 1)
+                    markerToRemove.setMap(null);
+                }
+                if (locationToRemove) locations.splice(locations.indexOf(locationToRemove), 1);
+                
+                // Set the state to false again
+                currentLocationAdded = false;
+            }
+
+            // Check if not added, add the marker for current location to the map
+            if (!currentLocationAdded) {
+                // Create an info window to display the information of current location when the marker is clicked 
+                let currentInfoWindow = new google.maps.InfoWindow();
+
+                // Create a function to be called when a marker is clicked, which will open the info window of the current location
+                let currentMarker_clicked = function() {
+                    currentInfoWindow.close();
+                    currentInfoWindow.setContent("This is your current location!" + "<br>" + "Latitude: " + this.LAT + "<br>" + "Longitude: " + this.LNG);
+                    currentInfoWindow.open(map, this);
+                }
+
+                // Create the content for the marker icon
+                const currentIcon_content = document.createElement("img");
+                currentIcon_content.src = "https://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png";
+                currentIcon_content.style.width = "35px";
+                currentIcon_content.style.height = "35px";
+
+                // Create an object to store the name, category, latitude, and longitude of the current location
+                let currentLocation = {
+                    NAME: "Your current Location",
+                    CATEGORY: "Entertainment",
+                    LAT: position.coords.latitude,
+                    LNG: position.coords.longitude
+                }
+
+                // Add current location to the locations array
+                locations.push(currentLocation);
+
+                // Create a marker for current location and set its position, title, and content (icon)
+                let currentLocation_marker = new google.maps.marker.AdvancedMarkerElement({
+                    map: map,
+                    position: { lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            },
+                    title: "This is your current location!",
+                    content: currentIcon_content
+                })
+
+                // Store the category, latitude, and longitude of the current location as the content of the info window
+                currentLocation_marker.CATEGORY = "Entertainment";
+                currentLocation_marker.LAT = position.coords.latitude;
+                currentLocation_marker.LNG = position.coords.longitude;
+
+                // Have the info window opened when the marker is clicked
+                currentLocation_marker.addListener("gmp-click", currentMarker_clicked);
+                
+                // Add the marker for current location to the markers array
+                markers.push(currentLocation_marker);
+
+                // Set the state to true after adding the marker for current location to the map
+                currentLocationAdded = true;
+            }
+
+            // Update the dropdown list for geodirection to include the current location
+            populateDropdown();
+        }
+
+        // Variable to hold the state of whether Nguyen Hue Street marker has been added to the map
+        let nguyenHueStreetAdded = false;
+
+        // Function to get the Nguyen Hue Street location and add a marker for it on the map
+        function nguyenHueGeoLocation(position) {
+            // Check if marker for Nguyen Hue Street added, if not, add the marker for Nguyen Hue Street to the map
+            if (nguyenHueStreetAdded === false) {
+                // Create an info window to display the information of Nguyen Hue Street when the marker is clicked 
+                let infoWindow = new google.maps.InfoWindow();
+
+                // Create a function to be called when a marker is clicked, which will open the info window of Nguyen Hue Street
+                let nguyenHueMarker_clicked = function() {
+                    infoWindow.close();
+                    infoWindow.setContent("This is Nguyen Hue Pedestrian Street, a famous walking street in the heart of Saigon!" + "<br>" + "Category: " + this.CATEGORY + "<br>" + "Address: " + this.ADDRESS + "<br>" + "Latitude: " + this.LAT + "<br>" + "Longitude: " + this.LNG);
+                    infoWindow.open(map, this);
+                }
+
+                // Create the content for the marker icon
+                const nguyenHueIcon_content = document.createElement("img");
+                nguyenHueIcon_content.src = "https://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png";
+                nguyenHueIcon_content.style.width = "35px";
+                nguyenHueIcon_content.style.height = "35px";
+
+                // Create an object to store the name, address, category, latitude, and longitude of Nguyen Hue Street
+                let nguyenHueLocation = {
+                    NAME: "Nguyen Hue Pedestrian Street",
+                    ADDRESS: "Nguyen Hue Street, Ben Nghe Ward, District 1, Ho Chi Minh City, Vietnam",
+                    CATEGORY: "Entertainment",
+                    LAT: 10.774131666552472,
+                    LNG: 106.70358999446731
+                }
+
+                // Add Nguyen Hue Street to the locations array
+                locations.push(nguyenHueLocation);
+
+                // Create a marker for Nguyen Hue Street and set its position, title, and content (icon)
+                let nguyenHueMarker = new google.maps.marker.AdvancedMarkerElement({
+                    map: map,
+                    position: { lat: nguyenHueLocation.LAT,
+                                lng: nguyenHueLocation.LNG
+                            },
+                    title: nguyenHueLocation.NAME,
+                    content: nguyenHueIcon_content
+                })
+
+                // Store the name, category, address, latitude, and longitude of Nguyen Hue Street as the content of the info window
+                nguyenHueMarker.CATEGORY = nguyenHueLocation.CATEGORY;
+                nguyenHueMarker.ADDRESS = nguyenHueLocation.ADDRESS;
+                nguyenHueMarker.LAT = nguyenHueLocation.LAT;
+                nguyenHueMarker.LNG = nguyenHueLocation.LNG;
+
+                // Have the info window opened when the marker is clicked
+                nguyenHueMarker.addListener("gmp-click", nguyenHueMarker_clicked);
+
+                // Add the marker for Nguyen Hue Street to the markers array
+                markers.push(nguyenHueMarker);
+
+                // Set the state to true after adding the marker for Nguyen Hue Street to the map
+                nguyenHueStreetAdded = true;
+            }
+            populateDropdown();
+        }
+
+        // Add event listeners to the geolocation buttons
+        document.getElementById("current-geolocate").addEventListener("click", function() {
+            navigator.geolocation.getCurrentPosition(currentGeolocation);
+        })
+        document.getElementById("nguyen-hue-geolocate").addEventListener("click", function() {
+            navigator.geolocation.getCurrentPosition(nguyenHueGeoLocation);
+        })
+
+        // Function to geocode an address entered by the user: add a marker on map, add marker to the markers array, add location to the locations array, and update the dropdown list for geodirection
+        function codeAddress() {
+            // Get the name, address, and category entered by the user
+            let nameInput = document.getElementById("name-input").value;
+            let addressInput = document.getElementById("address-input").value;
+            let categoryInput = document.getElementById("category-select").value;
+
+            // Create an info window to display the information of added location when the marker is clicked 
+            let infoWindow = new google.maps.InfoWindow();
+
+            // Create a function to be called when a marker is clicked, which will open the info window of the added location
+            let geoMarker_clicked = function() {
+                infoWindow.close();
+                infoWindow.setContent("Name: " + this.NAME + "<br>" + "Address: " + this.ADDRESS + "<br>" + "Category: " + this.CATEGORY + "<br>" + "Latitude: " + this.LAT + "<br>" + "Longitude: " + this.LNG);
+                infoWindow.open(map, this);
+            }
+            
+            // Create the content for the marker icon based on the category entered by the user
+            const geocoderIcon_content = document.createElement("img");
+            geocoderIcon_content.style.width = "35px";
+            geocoderIcon_content.style.height = "35px";
+            
+            // Set the marker icon based on the category entered by the user
+            if (categoryInput === "Prominent Places") {
+                geocoderIcon_content.src = "https://maps.google.com/mapfiles/kml/shapes/camera.png";
+            }
+            else if (categoryInput === "Entertainment") {
+                geocoderIcon_content.src = "https://maps.google.com/mapfiles/kml/shapes/dollar.png";
+            }
+            else if (categoryInput === "Coffee Shops") {
+                geocoderIcon_content.src = "https://maps.google.com/mapfiles/kml/shapes/coffee.png";
+            }
+            else if (categoryInput === "Restaurants") {
+                geocoderIcon_content.src = "https://maps.google.com/mapfiles/kml/shapes/snack_bar.png";
+            }
+            
+            // Geocode the address entered by the user
+            geocoder.geocode({address: addressInput}, function(results, status) {
+                // Check if the name and address entered by the user are not empty, if empty, alert the user to enter both name and address for the location and return without geocoding
+                if (nameInput.trim() === "" || addressInput.trim() === "") {
+                    alert("Please enter both name and address for the location!");
+                    return;
+                }
+                // If successful, add a marker for the geocoded location to the map, add the marker to the markers array, add the location to the locations array, and update the dropdown list for geodirection
+                if (status === "OK") {
+                    // Create an object to store the name, address, category, latitude, and longitude of the added location
+                    let addedLocation = {
+                        NAME: nameInput,
+                        ADDRESS: addressInput,
+                        CATEGORY: categoryInput,
+                        LAT: results[0].geometry.location.lat(),
+                        LNG: results[0].geometry.location.lng()
+                    };
+
+                    // Add the added location to the locations array
+                    locations.push(addedLocation);
+                    
+                    // Create a marker for the added location and set its position, title, and content (icon)
+                    let geoMarker = new google.maps.marker.AdvancedMarkerElement({
+                        map: map,
+                        position: {lat:addedLocation.LAT,
+                                    lng: addedLocation.LNG
+                                  },
+                        content: geocoderIcon_content
+                    });
+
+                    // Store the name, address, category, latitude, and longitude of the added location as the content of the info window
+                    geoMarker.NAME = addedLocation.NAME;
+                    geoMarker.ADDRESS = addedLocation.ADDRESS;
+                    geoMarker.CATEGORY = addedLocation.CATEGORY;
+                    geoMarker.LAT = addedLocation.LAT;
+                    geoMarker.LNG = addedLocation.LNG;
+
+                    // Have the info window opened when the marker is clicked
+                    geoMarker.addListener("gmp-click", geoMarker_clicked);
+
+                    // Add the marker for the added location to the markers array
+                    markers.push(geoMarker);
+
+                    // Update the dropdown list for geodirection to include the added location
+                    populateDropdown();
+                } 
+                // If not successful, alert the user about the failure of geocoding
+                else {
+                    alert("Geocode was not successful for the following reasons: " + status);
+                }
+            });
+        }
+
+        // Add an event listener to the button for geocoding the address entered by the user
+        document.getElementById("address-send").addEventListener("click", codeAddress);
+
+        // Function to calculate and render the route from the starting location to the ending location
+        function calculateAndRenderRoute() {
+            // Create a request object for the geodirection service, which includes the origin, destination, and travel mode (driving)
+            let request = {
+                origin: {lat: locations[document.getElementById("starting-location").value].LAT,
+                        lng: locations[document.getElementById("starting-location").value].LNG,
+                        },
+                destination: {lat: locations[document.getElementById("ending-location").value].LAT,
+                              lng: locations[document.getElementById("ending-location").value].LNG
+                             },
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+
+            // Use the geodirection service to calculate the route based on the request object
+            directionsService.route(request, function(result, status) {
+                // If successful, use the geodirection renderer to display the route on the map
+                if (status == "OK") {
+                    directionsRenderer.setDirections(result);
+                }
+                // If not successful, alert the user about the failure of finding directions
+                else {
+                    alert("Directions not found for Driving!");
+                }
+            })
+        }
+
+        // Variable to store the index of the previously selected starting location in the dropdown list
+        let tempIndex = 0;
+
+        // Function to update the options in the ending location dropdown list based on the selected starting location, which will be called when the starting location is changed
+        function displayArriveDestinationSelection() {
+            // Get the selected starting location and ending location from the dropdown lists
+            let startingLocationOption = document.getElementById("starting-location");
+            let endingLocationOption = document.getElementById("ending-location");
+
+            // Get the index of the selected starting location and ending location in the dropdown lists
+            let startingLocationIndex = startingLocationOption.value;
+            let endingLocationIndex = endingLocationOption.value;
+            
+            // Set the options in the ending location dropdown list to be empty
+            endingLocationOption.innerHTML = "";
+            
+            // Loop through the locations array and add options for the ending location dropdown list, excluding the location that has the same address as the selected starting location
+            for (let j = 0; j < locations.length; j++) {
+                if (parseInt(startingLocationIndex) !== j) {
+                    endingLocationOption.innerHTML += "<option value='" + j + "'>" + locations[j].NAME + "</option>";
+                }
+            }
+
+            // If selecting the starting location the same as the ending location, swap the locations
+            if (startingLocationIndex === endingLocationIndex) {
+                endingLocationOption.value = tempIndex;
+            } 
+            // If not, keep the selected ending location
+            else {
+                endingLocationOption.value = endingLocationIndex;
+            }
+
+            // Update the tempIndex to the index of the selected starting location for the next time when the starting location is changed
+            tempIndex = startingLocationIndex;
+        }
+
+        // Add an event listener to the starting location dropdown list to call the function to update the options in the ending location dropdown list when the starting location is changed
+        document.getElementById("starting-location").addEventListener("change", displayArriveDestinationSelection);
+
+        // Populate the dropdown list for geodirection
+        function populateDropdown() {
+            // Get the starting location and ending location dropdown lists
+            const startingLocationSelect = document.getElementById("starting-location");
+            const endingLocationSelect = document.getElementById("ending-location");
+
+            // Set the options in the starting location and ending location dropdown lists to be empty
+            startingLocationSelect.innerHTML = "";
+            endingLocationSelect.innerHTML = "";
+
+            // Loop through the locations array and add options for the starting location dropdown list
+            for (let i = 0; i < locations.length; i++) {
+                startingLocationSelect.innerHTML += "<option value='" + i + "'>" + locations[i].NAME + "</option>";
+            }
+
+            // Loop through the locations array and add options for the ending location dropdown list, excluding the location that has the same address as the starting location
+            for (let j = 0; j < locations.length; j++) {
+                if (parseInt(startingLocationSelect.value) !== j) {
+                    endingLocationSelect.innerHTML += "<option value='" + j + "'>" + locations[j].NAME + "</option>";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
